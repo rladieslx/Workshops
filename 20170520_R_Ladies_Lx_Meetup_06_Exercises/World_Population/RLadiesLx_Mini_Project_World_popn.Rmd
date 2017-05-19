@@ -121,26 +121,6 @@ PopnMF <- Wpopn %>%
           filter(!is.na(PopnF) & !is.na(PopnM)) %>%
           arrange(  )
 
-# === # TO BE DELETED - JUST FOR AC and AH. # === #
-
- PopnMF <- Wpopn %>%
-    gather(key = "SexYear", value = "Popn", -Country ) %>%
-    mutate(Sex = str_sub(SexYear, start = 1, end = 5)) %>%
-    mutate(Year = parse_number(SexYear)) %>%
-    select(-SexYear) %>%
-    spread(key = Sex, value = Popn) %>%
-    filter(!is.na(PopnF) & !is.na(PopnM)) %>%           
-    arrange(Country, Year)
-
-
-# PopnMF <- Wpopn %>%
-  #  gather(key = "SexYear", value = "Popn", -Country ) %>%
-  #  mutate(Sex = str_sub(SexYear, start = 1, end = 5)) %>%
-  #  mutate(Year = parse_number(SexYear)) %>%
-  #  select(-SexYear) %>%
-  #  spread(key = Sex, value = Popn) %>%
-  #  filter(!is.na(PopnF) & !is.na(PopnM)) %>%           
-  #  arrange(Country, Year)
 ```
 
 
