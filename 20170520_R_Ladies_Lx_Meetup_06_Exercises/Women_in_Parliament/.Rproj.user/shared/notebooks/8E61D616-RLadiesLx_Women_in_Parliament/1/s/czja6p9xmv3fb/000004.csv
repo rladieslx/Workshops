@@ -1,0 +1,4 @@
+"0","WiP_gat <- gather(Angola:Portugal, key = Country_Name, value = ""Fip.pct"" )
+"
+"2","Error in is.data.frame(x) : object 'Angola' not found
+"

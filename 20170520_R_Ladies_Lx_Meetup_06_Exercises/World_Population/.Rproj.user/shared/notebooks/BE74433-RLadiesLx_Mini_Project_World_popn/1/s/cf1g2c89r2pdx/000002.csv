@@ -1,0 +1,4 @@
+"0","# library(wbstats)"
+"0","# To see the orginal male and female data use:"
+"0","# popF <- wb(indicator = ""SP.POP.TOTL.FE.IN"")"
+"0","# popM <- wb(indicator = ""SP.POP.TOTL.MA.IN"")"

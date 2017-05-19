@@ -1,0 +1,3 @@
+"0","# Method 1: Keep the observations (rows) for Portugual for 2000 and 2016 "
+"0","WiP_pt2 <- filter(WiP_Tidy, Country_Name == ""Portugal"" & (Year == 2010 | Year ==2016))"
+"0","WiP_pt2"

@@ -1,0 +1,25 @@
+"0","# The World pop"
+"0","WpopCSV <- ""World_Popn_MF.csv"""
+"0","Wpopn <- read_csv(WpopCSV)"
+"2","Parsed with column specification:
+cols(
+  .default = col_double(),
+  Country = col_character(),
+  PopnF1961 = col_integer(),
+  PopnF1962 = col_integer(),
+  PopnF1963 = col_integer(),
+  PopnF1964 = col_integer(),
+  PopnF1965 = col_integer(),
+  PopnF1968 = col_integer(),
+  PopnF1969 = col_integer(),
+  PopnF1970 = col_integer(),
+  PopnF1971 = col_integer(),
+  PopnF1972 = col_integer(),
+  PopnF1973 = col_integer(),
+  PopnF1974 = col_integer(),
+  PopnF1976 = col_integer(),
+  PopnF1977 = col_integer()
+)
+"
+"2","See spec(...) for full column specifications.
+"

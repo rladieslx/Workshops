@@ -1,0 +1,292 @@
+---
+title: 'Mini Project: World Population'
+author: "Taught by Saghir Bashir (ilustat.com)"
+date: "20 May 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+  dev = "png",
+  fig.ext = ".png")
+```
+
+## How to complete this Mini Project
+
+  1. Please read through **ALL** the text below and follow the instructions.
+  2. Following the instructions complete and run **R code chunks**.
+  3. Check that the **R code chunks** are error free  by clicking the play button.
+  4. When you have **completed** the mini project and it is error free you should be able
+  to **knit** it into **HTML**.
+  5. Take your time and work with your partner.
+
+
+
+
+## World Bank Data: World Population
+
+The World Population data was taken from the World Bank data using the `wbstats` package.
+```{r wbstats_Data, echo=TRUE, eval=FALSE}
+# library(wbstats)
+# To see the orginal male and female data use:
+# popF <- wb(indicator = "SP.POP.TOTL.FE.IN")
+# popM <- wb(indicator = "SP.POP.TOTL.MA.IN")
+```
+
+Note the data were combined and a new CSV file created for this mini project.
+
+*Source:* [World Bank](http://data.worldbank.org/)
+
+## Questions
+
+From the World Population data we would like to answer the following questions:
+
+  1. What are the lowest 10 proportion for females and males by Country and year?
+  2. What are the highest 10 proportion for females and males by Country and year?
+  3. What are the Portuguese trends for size and percent? 
+  4. How does Portugal compare to other European Countries?
+
+
+
+## Load Libraries first
+
+Don't forget to load the libraries first:
+```{r loadLibs}
+# Loading the tidyverse packages
+library(tidyverse)
+# We also need package stringr later
+library(stringr)
+```
+
+You must do this each time you start R.
+
+## World Population Original CSV Data
+
+A modified version of the World Population data is present in the file "World_Popn_MF.csv". Read it in using
+`read_csv()` from the `readr` package.
+
+```{r WPop_CSV_Data, echo=TRUE, eval=TRUE}
+# The World pop
+WpopCSV <- "World_Popn_MF.csv"
+Wpopn <- read_csv(WpopCSV)
+```
+
+### World Population Tidy Data Example
+
+We want to end up with a tidy dataset with all the countries like
+```{r Wpop_Tidy_Data}
+PopnMF_eg <- read_rds("popnMF_eg.rds")
+glimpse(PopnMF_eg)
+```
+
+***Exercise***
+
+With your partner look at the datasets (tibbles) `Wpopn` and `PopnMF_eg`.
+
+  - Discuss the structure and content of both datasets. 
+  - What do the variables (columns) in `Wpopn` represent?
+  - Can the questions be answered with this data?
+  - How can you tidy the dataset `Wpopn` in the structure of `PopnMF_eg`?
+
+***Hints***
+  - You could use `glimpse()` or `names()` functions on the `Wpopn` and `PopnMF_eg` datasets.
+  - You could open the `Wpopn` but it may be presented a bit truncated as there are too many variables to display.
+
+
+
+
+## World Population Creating Tidy Data
+
+To create a tidy version (called `PopnMF`) of the `Wpopn` dataset use the following steps to fill 
+in the missing code below:
+
+  1. Put the populations totals into a variable called `Popn` and call the `key` variable "SexYear".
+  2. Create variable `Sex` as the first character of variable `SexYear`. [COMPLETED]
+  3. Create variable `Year` as numeric part of variable `SexYear`.  [COMPLETED]
+  4. Remove variable `SexYear`
+  5. Spread the data by `Sex`
+  6. Remove any missing "NA" values for both `PopnF` and `PopnM`. [COMPLETED]
+  7. Sort (arrange) the data by `Country` and `Year`
+
+
+
+```{r Wpopn_tidy}
+#--# Fill in all the functions below
+PopnMF <- Wpopn %>%
+          gather(key =    , value =    , -Country) %>%
+          mutate(Sex = str_sub(SexYear, start = 1, end = 5)) %>%
+          mutate(Year = parse_number(SexYear)) %>%
+          select(    ) %>%
+          spread(key =     , value =    ) %>%
+          filter(!is.na(PopnF) & !is.na(PopnM)) %>%
+          arrange(  )
+
+# === # TO BE DELETED - JUST FOR AC and AH. # === #
+
+ PopnMF <- Wpopn %>%
+    gather(key = "SexYear", value = "Popn", -Country ) %>%
+    mutate(Sex = str_sub(SexYear, start = 1, end = 5)) %>%
+    mutate(Year = parse_number(SexYear)) %>%
+    select(-SexYear) %>%
+    spread(key = Sex, value = Popn) %>%
+    filter(!is.na(PopnF) & !is.na(PopnM)) %>%           
+    arrange(Country, Year)
+
+
+# PopnMF <- Wpopn %>%
+  #  gather(key = "SexYear", value = "Popn", -Country ) %>%
+  #  mutate(Sex = str_sub(SexYear, start = 1, end = 5)) %>%
+  #  mutate(Year = parse_number(SexYear)) %>%
+  #  select(-SexYear) %>%
+  #  spread(key = Sex, value = Popn) %>%
+  #  filter(!is.na(PopnF) & !is.na(PopnM)) %>%           
+  #  arrange(Country, Year)
+```
+
+
+
+## Answering the Questions
+
+###  1. What are the lowest and highest 10 proportion for females by country and year?
+
+
+We will create a new dataset called `Popn_all` from dataset `PopnMF` with two new variables 
+for the proportions of females and males.
+```{r lpropF}
+# Solution given 
+Popn_all <- PopnMF %>%
+                 mutate(PropF = PopnF / (PopnF + PopnM)) %>%
+  #--# We add it now as it will be used for Question 2 below.
+  #--# Fill in the `mutate` to calclute the proportion for men.
+                 mutate(PropM =  ) %>%
+                 arrange(PropF, Country, Year)
+                 
+# Printing the first 10 observations.
+Popn_all %>%  head(10) %>%  print
+```
+
+***Exercise*** 
+
+What are the 10 highest?
+```{r lhpropM}
+#--# Method 1: Use the `tail()` function instead of `head()` function.
+Popn_all %>%
+
+  
+  
+#--# Method 2: Use the `arrange()` with a descending (`desc()`) sort.
+Popn_all %>% arrange (  ) %>%
+
+
+```
+
+
+
+
+###  2. What are the lowest and highest 10 proportion for males by country and year?
+
+Using the dataset `Popn_all` do the same for male proportions (`PropM`).
+
+***Hint*** Don't forget to sort (`arrange()`) the data first for males.
+
+```{r hpropF}
+#--# Complete to show the lowest 10 proportions for males.
+Popn_all %>% arrange (  ) %>%
+
+
+# Show the highest 10 proportions for males.
+Popn_all %>% tail(10) %>% print
+
+
+```
+
+**Discuss with your partner**
+
+  - What is the relationship between Questions 1 and 2?
+
+
+
+
+###  3. What are the Portuguese trends for size and percent? 
+
+Create dataset called `PopnPT` with only the Portuguese data. Look at this
+new dataset.
+```{r Portugal_Trends}
+#--# C
+PopnPT <- Popn_all %>%
+  #--# To do: Select only the Portuguese data.
+          filter(  )
+```
+
+
+***Graphs***
+
+A couple of plots for females to look at the trends
+```{r plot_Females}
+# Proportion of females over time.
+PopnPT %>% ggplot(aes(Year , PropF)) + 
+           geom_line() +
+           labs(title = "Portuguese Population") + 
+           ylab("Proportion - Females") +
+           scale_y_continuous(limits = c(0, 1))
+
+# Number of females over time.
+PopnPT %>% ggplot(aes(Year , PopnF)) + 
+           geom_line() +
+           labs(title = "Portuguese Population") + 
+           ylab("Number - Females") 
+```
+
+***Exercise***
+
+Make the two plots above for males.
+```{r plot_males}
+# Proportion of males over time.
+
+
+# Number of males over time.
+
+
+```
+
+**Discuss** the trends with your partner.
+
+
+###  4. How does Portugal compare to other European Countries?
+
+Create dataset called `PopnEU` with the Portuguese data and **four** other EU countries 
+of your choice. Your objective is to compare the population trends in all five countries.
+
+This is a free exercise for you to use a mix of what you have learnt and *your* ideas.
+
+***ENJOY!***
+
+```{r PTvsEU}
+#--# You are free to decide how to compare :o)
+
+
+```
+
+
+
+
+## Knit this document.
+
+Once completed and working, click on the "Knit" button above. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

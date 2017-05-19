@@ -1,0 +1,12 @@
+"0","PopnMF <- Wpopn %>%
+    gather(key = ""SexYear"", value = ""Popn"", -Country ) %>%
+    mutate(Sex = parse_character(SexYear)) %>%
+    mutate(Year = parse_number(SexYear)) %>%
+    select(-SexYear) %>%
+    spread(key = Sex, value = Popn) %>%
+    rename(PopnF = Female) %>%
+    rename(PopnM = Male) %>%
+    arrange(Country, Year)
+"
+"2","Error: Unknown variables: Female.
+"

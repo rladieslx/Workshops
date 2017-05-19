@@ -1,0 +1,249 @@
+---
+title: 'Exercises: Women in Parliament'
+author: "Taught by Saghir Bashir (ilustat.com)"
+date: "20 May 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+  dev = "png",
+  fig.ext = ".png")
+```
+
+## Women in Parliament World Bank Data
+
+**Proportion of seats held by women in national parliaments (%)**
+
+*Source:* [World Bank](http://data.worldbank.org/indicator/SG.GEN.PARL.ZS)
+
+## Questions
+
+From the Women in Parliament data we would like to answer the following questions:
+
+  - How does Portugal compare in Europe?
+  - For each female in parliament how many men are there?
+  - Which countries have no women in Parliament by year?
+
+
+
+
+
+
+## WiP Original Data
+
+The data downloaded from the above World Bank link is presented in `WiP_Orig`. Run the following
+chunk and then open it to look at.
+
+```{r WiP_Orig_Data, echo=TRUE, eval=TRUE, message=FALSE}
+# We must load the tidyverse package first
+library(tidyverse)
+
+# Opening the original data in R 
+# Source CSV file: API_SG.GEN.PARL.ZS_DS2_en_csv_v2.csv
+WiP_Orig  <- readRDS("WiP_Orig.rds")
+```
+
+#### Exercise - Original Data
+
+Open `WiP_Orig` from the *`Environment`* tab (top right in RStudio) or type `View(WiP_Orig)` in the *`Console`* (bottom left in RStudio).
+
+  - Discuss the structure and content with your partner
+  - Can the questions be answered with this data?
+  - How would you make the data “tidy”?
+
+***Hints***
+
+  - What problems can you foresee with the variable names?
+  - What is Variable X62? (Hint 2: Look at source CSV file `header` line after `2016`.)
+  - Are the variables correctly identified?
+  - Can variables be removed?
+
+```{r lookOrigData}
+glimpse(WiP_Orig)
+```
+
+
+
+
+
+
+## WiP Tidy Data
+
+For the next exercises we will work with a tidy version of `WiP_Orig` dataset. Later we will come back to create it from the original CSV file.
+
+```{r WiP_Tidy_Data, echo=TRUE, eval=TRUE, message=FALSE}
+# Tidy version of WiP_Orig
+WiP_Tidy  <- readRDS("WiP_Tidy.rds")
+```
+
+Have a look at the `WiP_Tidy` dataset. Perhaps try:
+```{r WiP_Tidy_look, echo=TRUE, eval=TRUE, message=FALSE}
+glimpse(WiP_Tidy)
+# or
+names(WiP_Tidy)
+```
+
+### Keep Selected Variable - dplyr::select()
+
+Using the `select()` function from `dplyr` there are two ways to keep the variable of key interest namely: "Country", "Year" and "Fip.pct". The first method is given what is the second?
+```{r dplyr_select}
+# Method 1
+WiP_s1 <- select(WiP_Tidy, Country_Name, Year, Fip.pct)
+glimpse(WiP_s1)
+
+#--# Method 2 - Fill in the select() function to give the same in a different way.
+#--# Hint: Use "-variable"
+WiP_s2 <- select( )
+glimpse(WiP_s2)
+```
+
+### Create New Variable - dplyr::mutate()
+
+Using the `mutate()` function from `dplyr` create the following two variables:
+
+  - % Men in Parliament (Mip.pct) as: 100 - % Females in Parliament
+  - Male to female ratio as: (% Men in Parliament) divided by (% Females in Parliament)
+
+```{r dplyr_select}
+# % Men in Parliament (Mip.pct)
+WiP_m1 <- mutate(WiP_Tidy, Mip.pct = 100 - Fip.pct)
+glimpse(WiP_m1)
+
+#--# Method 2 - Fill in the mutate( ) to calculate the Male to Female ratio called `MF_ratio`
+WiP_m2 <- mutate( )
+glimpse(WiP_m2)
+```
+
+### Create New Variable - dplyr::rename()
+
+Using the `rename()` function from `dplyr` rename  `Country_Name` to `Country`:
+```{r dplyrs_rename}
+#--# Fill in the rename( ) function to rename  `Country_Name` to `Country`
+WiP_r1 <- rename( )  
+names(WiP_r1)
+```
+
+### Create New Variable - dplyr::filter()
+
+Using the `filter()` function from `dplyr`: 
+```{r WiP_pt}
+# only keep the observations (rows) for Portugual data from 2010 onwards
+WiP_pt1 <- filter(WiP_Tidy, Country_Name == "Portugal" & Year >= 2010)
+WiP_pt1
+
+# Method 1: Keep the observations (rows) for Portugual for 2000 and 2016 
+WiP_pt2 <- filter(WiP_Tidy, Country_Name == "Portugal" & (Year == 2010 | Year ==2016))
+WiP_pt2
+# Method 2: Keep the observations (rows) for Portugual for 2000 and 2016 
+WiP_pt3 <- filter(WiP_Tidy, Country_Name == "Portugal" & Year %in% c(2000, 2016))
+WiP_pt3
+
+#--# Fill in the filter function to keep all data for "Angola", "Brazil" and "Portugal"
+WiP_pt4 <- filter( )
+WiP_pt4
+
+#--# Fill in the filter function to keep all data for "Angola", "Brazil" and "Portugal"
+#--# where % females in parliament is less than 10%.
+WiP_pt5 <- filter( )
+WiP_pt5
+```
+
+### Create New Variable - dplyr::arrange()
+
+Using the `arrange()` function from `dplyr`: 
+
+```{r dplyr_arrange}
+# Arrange the data by country and descending year
+WiP_a1 <- arrange(WiP_Tidy, Country_Name, desc(Year))
+WiP_a1
+
+#--# Fill in the arrange function below to sort the data by descending % females in parliament
+#--# (highest percent of females first), Country_Name and Year
+WiP_a2 <- arrange( )
+WiP_a2
+
+#--# Fill in the arrange function below to sort the data by descending % females in parliament
+#--# (highest percent of females first), Year and Country_Name -- VARIABLE ORDER CHANGED from WiP_a2
+WiP_a3 <- arrange( )
+WiP_a3
+```
+
+### Pipes - %>% from `magrittr`
+
+We will use the pipe operator `%>%` to do multiple steps.
+
+Create `WiP_p1` as:
+
+  1. Keep the observations for Countries "Cuba", "Peru" and "Brazil"
+  2. then keep the variables `Country_Name`, `Year` and `Fip:pct`
+  3. then rename `Country_Name` to `Country`
+  4. then create variable % Males in Parliament (Mip.pct)
+  5. then arrange the data by Country, descending Year
+
+```{r pipe_example}
+# Hint: read `%>%` as "then" do.
+WiP_p1 <- WiP_Tidy %>%
+          filter(Country_Name %in% c("Cuba", "Peru", "Brazil")) %>%
+          select(Country_Name, Year, Fip.pct) %>%
+          rename(Country = Country_Name) %>%
+          mutate(Mip.pct = 100 - Fip.pct) %>%
+          arrange(Country, desc(Year))
+WiP_p1
+```
+
+
+
+
+#### Exercise - Tidy Data
+
+Create `WiP_TD` as:
+
+  1. Keep the variables `Country_Name`, `Year` and `Fip:pct`
+  2. then rename `Country_Name` to `Country`
+  3. then create variable % Males in Parliament (Mip.pct)
+  4. then the male to female ratio (MF_ratio)
+  5. then arrange the data by Country, Year
+
+```{r WiP_Tidy_Exercise}
+#--# Complete the code below to create `WiP_TD` as described above using `%>%` (pipe operator)
+WiP_TD %>% WiP_Tidy %>%
+  
+  
+glimpse(WiP_TD)
+```
+
+Finally open the dataset and look through it to see it makes sense.
+
+
+
+### Spreading the data - tidyr::spread()
+
+We will use the `spread()` function from the `tidyr` to show data from Angola, Portugal and Brazil
+side by side.
+```{r tidyr_spread}
+WiP_ABP <- WiP_Tidy %>%
+           select(Country_Name, Year, Fip.pct) %>%
+           filter(Country_Name %in% c("Angola", "Brazil", "Portugal")) %>%
+           spread(key = Country_Name, value = Fip.pct)
+glimpse(WiP_ABP)
+```
+
+Using the `gather()` function from the `tidyr` put the data back into the original format.
+```{r tidyr_gather}
+#--# Fill in the filter function to put the Country data back into one column.
+# Note we call the old "Country_Name" - "Country" now.
+WiP_gat <- WiP_ABP %>%
+           gather(Angola:Portugal, key = Country, value = Fip.pct)
+
+glimpse(WiP_gat)
+```
+
+
+
+
+
+## Knit this document.
+
+Once completed and working, click on the "Knit" button above. 
+

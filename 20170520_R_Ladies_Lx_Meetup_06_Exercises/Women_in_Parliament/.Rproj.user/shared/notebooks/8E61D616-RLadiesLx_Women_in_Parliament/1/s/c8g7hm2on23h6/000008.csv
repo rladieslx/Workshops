@@ -1,0 +1,5 @@
+"0","#--# Fill in the filter function to keep all data for ""Angola"", ""Brazil"" and ""Portugal"""
+"0","WiP_pt4 <- filter( )"
+"2","Error in filter_(.data, .dots = lazyeval::lazy_dots(...)) : 
+  argument "".data"" is missing, with no default
+"
